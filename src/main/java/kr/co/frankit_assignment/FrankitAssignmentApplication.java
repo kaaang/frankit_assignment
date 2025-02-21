@@ -9,5 +9,4 @@ public class FrankitAssignmentApplication {
     public static void main(String[] args) {
         SpringApplication.run(FrankitAssignmentApplication.class, args);
     }
-
 }

@@ -1,0 +1,8 @@
+if (new File("$rootProject.projectDir/.git").exists()) {
+    def hook = new File("$rootProject.projectDir/.git/hooks/pre-commit")
+    hook.text = """#!/bin/bash
+echo "Will run Google Java Format Checker"
+./gradlew spotlessCheck
+"""
+    hook.setExecutable(true)
+}
