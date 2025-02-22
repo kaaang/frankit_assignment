@@ -80,7 +80,7 @@ docker compose -f ./.lezhin_test/docker-compose.yml up -d
 | `price`       | Integer | true     | 가격          |
 | `shippingFee` | Integer | false    | 배송비         |
 
-##### RequestBody
+##### ResponseBody
 | Key    | Type | Required | Description |
 |:-------|:-----|:---------|:------------|
 | `data` | UUID | true     | 상품 아이디      |
@@ -91,3 +91,24 @@ docker compose -f ./.lezhin_test/docker-compose.yml up -d
 | `201` | 상품 생성 성공      |
 | `403` | user권한이 아닐 경우 |
 
+> #### [PUT] /products/:id - 상품 수정
+
+##### PathVariable
+| Key  | Type | Required | Description |
+|:-----|:-----|:---------|:------------|
+| `id` | UUID | true     | 상품 아이디      |
+
+##### RequestBody
+| Key           | Type    | Required | Description |
+|:--------------|:--------|:---------|:------------|
+| `name`        | String  | true     | 상품명         |
+| `description` | String  | true     | 상품 설명       |
+| `price`       | Integer | true     | 가격          |
+| `shippingFee` | Integer | false    | 배송비         |
+
+
+#### Status
+| Code  | Description                 |
+|:------|:----------------------------|
+| `200` | 상품 수정 성공                    |
+| `403` | user권한이 아닐 경우, 상품 생성자가 아닐경우 |

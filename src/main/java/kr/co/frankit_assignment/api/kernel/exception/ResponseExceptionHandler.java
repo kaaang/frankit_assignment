@@ -52,6 +52,19 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
         return this.toResponseEntity(errorResponse);
     }
 
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<Object> accessDeniedException(
+            AccessDeniedException e, ServletWebRequest request) {
+        var errorResponse =
+                ErrorResponse.builder()
+                        .status(HttpStatus.FORBIDDEN)
+                        .errors(List.of(e.getMessage()))
+                        .path(request.getRequest().getRequestURI())
+                        .build();
+
+        return this.toResponseEntity(errorResponse);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
