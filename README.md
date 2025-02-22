@@ -150,6 +150,30 @@ docker compose -f ./.lezhin_test/docker-compose.yml up -d
 #### Status
 | Code  | Description    |
 |:------|:---------------|
-| `200` | 상품 삭제 성공       |
+| `200` | 상품 조회 성공       |
 | `403` | user권한이 아닐 경우  |
 | `404` | 상품을 찾을 수 없을 경우 |
+
+> #### [GET] /products - 상품 리스트 검색
+
+##### QueryParams
+| Key            | Type    | Required | Description |
+|:---------------|:--------|:---------|:------------|
+| `size`         | Integer | true     | 조회할 페이지 사이즈 |
+| `lastViewedId` | UUID    | false    | 마지막 조회 아이디  |
+| `lastViewedAt` | Date    | false    | 마지막 조회 생성일  |
+
+##### ResponseBody - data -> list
+| Key           | Type    | Required | Description |
+|:--------------|:--------|:---------|:------------|
+| `id`          | UUID    | true     | 상품 아이디      |
+| `name`        | String  | true     | 상품 이름       |
+| `createdBy`   | UUID    | true     | 상품 생성자 아이디  |
+| `shippingFee` | Integer | true     | 배송비         |
+| `price`       | Integer | true     | 가격          |
+| `createdAt`   | Date    | true     | 생성일         |
+
+#### Status
+| Code  | Description |
+|:------|:------------|
+| `200` | 상품리스트 조회 성공 |

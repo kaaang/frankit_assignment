@@ -2,6 +2,7 @@ package kr.co.frankit_assignment.api.product.presentation;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
 import java.util.UUID;
 import kr.co.frankit_assignment.config.TestBaseConfig;
 import kr.co.frankit_assignment.config.payload.ResultActionsPayload;
@@ -60,6 +61,42 @@ class ProductQueryControllerTest extends TestBaseConfig {
                             .userDetails(test_one_user)
                             .path("/products/{id}")
                             .pathVariable(savedProduct.getId().toString())
+                            .build();
+
+            getResultActions(payload).andExpect(status().isOk());
+        }
+    }
+
+    @Nested
+    class GetProductsTest {
+        @BeforeEach
+        void setUp() {
+            var products = new ArrayList<Product>();
+            for (int i = 0; i < 30; i++) {
+                products.add(
+                        new ProductFactory(
+                                        ProductData.builder()
+                                                .id(UUID.randomUUID())
+                                                .name("test")
+                                                .description("test description")
+                                                .createdBy(test_one_user.getId())
+                                                .price(10000)
+                                                .shippingFee(3000)
+                                                .build())
+                                .create());
+            }
+
+            productWriteRepository.saveAll(products);
+        }
+
+        @Test
+        void shouldBeReturn200() throws Exception {
+            params.add("size", "10");
+            var payload =
+                    ResultActionsPayload.builder()
+                            .httpMethod(HttpMethod.GET)
+                            .userDetails(test_one_user)
+                            .path("/products")
                             .build();
 
             getResultActions(payload).andExpect(status().isOk());
