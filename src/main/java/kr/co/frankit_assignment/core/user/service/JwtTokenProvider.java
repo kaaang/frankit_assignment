@@ -1,6 +1,7 @@
 package kr.co.frankit_assignment.core.user.service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
@@ -9,6 +10,8 @@ import java.util.UUID;
 import kr.co.frankit_assignment.core.user.User;
 import kr.co.frankit_assignment.core.user.UserData;
 import kr.co.frankit_assignment.core.user.UserFactory;
+import kr.co.frankit_assignment.core.user.service.exception.UserJwtException;
+import kr.co.frankit_assignment.core.user.vo.UserRoleType;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,29 +27,31 @@ public class JwtTokenProvider {
     }
 
     public UserJwt generateToken(UUID userId, UserDetails userDetails) {
-        var accessToken = this.createAccessToken(userId, userDetails);
-
         return UserJwt.builder()
                 .accessToken(this.createAccessToken(userId, userDetails))
                 .expiresIn((int) accessTokenValidity / 1000)
                 .build();
     }
 
-    public void validateToken(String token) {
-        this.parse(token);
-    }
-
     public User claimsToUser(Claims claims) {
+        var id = claims.get("id", String.class);
+        var role = claims.get("roleType", String.class);
+
         return new UserFactory(
                         UserData.builder()
-                                .id(claims.get("id", UUID.class))
+                                .id(UUID.fromString(id))
                                 .email(claims.get("email", String.class))
+                                .roleType(UserRoleType.findBy(role))
                                 .build())
                 .create();
     }
 
-    private Claims parse(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    public Claims validateAndParse(String token) {
+        try {
+            return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+        } catch (JwtException e) {
+            throw new UserJwtException(e.getMessage(), e);
+        }
     }
 
     private String createAccessToken(@NonNull UUID userId, @NonNull UserDetails userDetails) {
@@ -68,7 +73,7 @@ public class JwtTokenProvider {
 
         claims.put("id", user.getId());
         claims.put("email", user.getUsername());
-        claims.put("roleType", user.getRoleType());
+        claims.put("roleType", user.getRoleType().toString());
 
         return claims;
     }

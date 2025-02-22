@@ -53,6 +53,19 @@ class SignUpCommandControllerTest extends TestBaseConfig {
         }
 
         @Test
+        void shouldBeReturn400Error_WhenEmailFormatInvalid() throws Exception {
+            var request = UserCreateRequest.builder().email("test").password("test").build();
+            var payload =
+                    ResultActionsPayload.builder()
+                            .httpMethod(HttpMethod.POST)
+                            .path("/users/signup")
+                            .request(request)
+                            .build();
+
+            getResultActions(payload).andExpect(status().isBadRequest());
+        }
+
+        @Test
         void shouldBeReturn201() throws Exception {
             var request = UserCreateRequest.builder().email("kang@gmail.com").password("test").build();
             var payload =
