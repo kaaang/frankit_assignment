@@ -146,4 +146,65 @@ class ProductCommandControllerTest extends TestBaseConfig {
             getResultActions(payload).andExpect(status().isOk());
         }
     }
+
+    @Nested
+    class DeleteProductTest {
+        private Product savedProduct;
+
+        @BeforeEach
+        void setUp() {
+            savedProduct =
+                    new ProductFactory(
+                                    ProductData.builder()
+                                            .id(UUID.randomUUID())
+                                            .name("test")
+                                            .description("test description")
+                                            .createdBy(test_one_user.getId())
+                                            .price(10000)
+                                            .shippingFee(3000)
+                                            .build())
+                            .create();
+
+            productWriteRepository.save(savedProduct);
+        }
+
+        @Test
+        void shouldBeReturn404Error_WhenNotFoundProductId() throws Exception {
+            var payload =
+                    ResultActionsPayload.builder()
+                            .httpMethod(HttpMethod.DELETE)
+                            .userDetails(test_one_user)
+                            .path("/products/{id}")
+                            .pathVariable(UUID.randomUUID().toString())
+                            .build();
+
+            getResultActions(payload).andExpect(status().isNotFound());
+        }
+
+        @Test
+        void shouldBeReturn409Error_WhenUpdateOtherUser() throws Exception {
+            var payload =
+                    ResultActionsPayload.builder()
+                            .httpMethod(HttpMethod.DELETE)
+                            .userDetails(test_two_user)
+                            .path("/products/{id}")
+                            .pathVariable(savedProduct.getId().toString())
+                            .build();
+
+            getResultActions(payload).andExpect(status().isForbidden());
+        }
+
+        @Test
+        void shouldBeReturn200() throws Exception {
+            var payload =
+                    ResultActionsPayload.builder()
+                            .httpMethod(HttpMethod.DELETE)
+                            .userDetails(test_one_user)
+                            .path("/products/{id}")
+                            .pathVariable(savedProduct.getId().toString())
+                            .build();
+
+            getResultActions(payload).andExpect(status().isOk());
+        }
+    }
 }

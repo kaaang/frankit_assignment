@@ -112,3 +112,17 @@ docker compose -f ./.lezhin_test/docker-compose.yml up -d
 |:------|:----------------------------|
 | `200` | 상품 수정 성공                    |
 | `403` | user권한이 아닐 경우, 상품 생성자가 아닐경우 |
+
+> #### [DELETE] /products/:id - 상품 삭제
+
+##### PathVariable
+| Key  | Type | Required | Description |
+|:-----|:-----|:---------|:------------|
+| `id` | UUID | true     | 상품 아이디      |
+
+
+#### Status
+| Code  | Description                 |
+|:------|:----------------------------|
+| `200` | 상품 삭제 성공                    |
+| `403` | user권한이 아닐 경우, 상품 생성자가 아닐경우 |

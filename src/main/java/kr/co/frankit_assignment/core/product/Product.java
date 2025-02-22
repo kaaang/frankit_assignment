@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import kr.co.frankit_assignment.core.kernel.domain.BaseEntityAggregateRoot;
 import lombok.*;
@@ -27,4 +28,8 @@ public class Product extends BaseEntityAggregateRoot<Product> {
     @Column private int shippingFee;
 
     @Column private UUID createdBy;
+
+    public void remove(@NonNull LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
+    }
 }
