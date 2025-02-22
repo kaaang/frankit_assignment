@@ -40,7 +40,7 @@ class SignUpCommandControllerTest extends TestBaseConfig {
         }
 
         @Test
-        void shouldBeReturn400Error_WhenAlreadyEmail() throws Exception {
+        void shouldBeReturn409Error_WhenAlreadyEmail() throws Exception {
             var request = UserCreateRequest.builder().email(testEmail).password("test").build();
             var payload =
                     ResultActionsPayload.builder()
@@ -49,7 +49,7 @@ class SignUpCommandControllerTest extends TestBaseConfig {
                             .request(request)
                             .build();
 
-            getResultActions(payload).andExpect(status().isBadRequest());
+            getResultActions(payload).andExpect(status().isConflict());
         }
 
         @Test
