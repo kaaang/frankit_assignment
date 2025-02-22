@@ -126,3 +126,30 @@ docker compose -f ./.lezhin_test/docker-compose.yml up -d
 |:------|:----------------------------|
 | `200` | 상품 삭제 성공                    |
 | `403` | user권한이 아닐 경우, 상품 생성자가 아닐경우 |
+
+
+> #### [GET] /products/:id - 상품 검색
+
+##### PathVariable
+| Key  | Type | Required | Description |
+|:-----|:-----|:---------|:------------|
+| `id` | UUID | true     | 상품 아이디      |
+
+##### ResponseBody
+| Key           | Type    | Required | Description |
+|:--------------|:--------|:---------|:------------|
+| `id`          | UUID    | true     | 상품 아이디      |
+| `name`        | String  | true     | 상품 이름       |
+| `description` | String  | true     | 상품 설명       |
+| `createdBy`   | UUID    | true     | 상품 생성자 아이디  |
+| `shippingFee` | Integer | true     | 배송비         |
+| `price`       | Integer | true     | 가격          |
+| `createdAt`   | Date    | true     | 생성일         |
+| `updatedAt`   | Date    | true     | 수정일         |
+
+#### Status
+| Code  | Description    |
+|:------|:---------------|
+| `200` | 상품 삭제 성공       |
+| `403` | user권한이 아닐 경우  |
+| `404` | 상품을 찾을 수 없을 경우 |
