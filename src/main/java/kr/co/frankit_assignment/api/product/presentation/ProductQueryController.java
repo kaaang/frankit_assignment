@@ -3,6 +3,8 @@ package kr.co.frankit_assignment.api.product.presentation;
 import java.util.UUID;
 import kr.co.frankit_assignment.api.kernel.presentation.response.HttpApiResponse;
 import kr.co.frankit_assignment.api.product.application.query.ProductQuery;
+import kr.co.frankit_assignment.api.product.application.query.field.ProductsField;
+import kr.co.frankit_assignment.api.product.presentation.rqeuest.ProductsRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,20 @@ public class ProductQueryController {
     @PreAuthorize("hasAnyRole(@RoleContainer.ALLOW_USER_ROLE)")
     public ResponseEntity<Object> detail(@PathVariable UUID id) {
         var output = productQuery.getOr404ById(id);
+
+        return ResponseEntity.ok(HttpApiResponse.of(output));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole(@RoleContainer.ALLOW_USER_ROLE)")
+    public ResponseEntity<Object> list(ProductsRequest request) {
+        var output =
+                productQuery.getProducts(
+                        ProductsField.builder()
+                                .size(request.getSize())
+                                .lastViewedId(request.getLastViewedId())
+                                .lastViewedAt(request.getLastViewedAt())
+                                .build());
 
         return ResponseEntity.ok(HttpApiResponse.of(output));
     }

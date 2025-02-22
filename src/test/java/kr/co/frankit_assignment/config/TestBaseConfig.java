@@ -87,6 +87,10 @@ public abstract class TestBaseConfig {
             requestBuilder.with(user(payload.getUserDetails()));
         }
 
+        if (!params.isEmpty()) {
+            requestBuilder.params(params);
+        }
+
         return mockMvc.perform(requestBuilder).andDo(print());
     }
 }
