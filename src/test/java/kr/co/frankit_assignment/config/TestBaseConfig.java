@@ -45,17 +45,28 @@ public abstract class TestBaseConfig {
 
     protected MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
-    protected User normal_user;
+    protected User test_one_user;
+    protected User test_two_user;
 
     @BeforeEach
     void setUp() {
         params.clear();
 
-        this.normal_user =
+        this.test_one_user =
                 new UserFactory(
                                 UserData.builder()
                                         .id(UUID.randomUUID())
-                                        .email("user@gmail.com")
+                                        .email("user1@gmail.com")
+                                        .password("test")
+                                        .roleType(UserRoleType.ROLE_USER)
+                                        .build())
+                        .create();
+
+        this.test_two_user =
+                new UserFactory(
+                                UserData.builder()
+                                        .id(UUID.randomUUID())
+                                        .email("user2@gmail.com")
                                         .password("test")
                                         .roleType(UserRoleType.ROLE_USER)
                                         .build())
