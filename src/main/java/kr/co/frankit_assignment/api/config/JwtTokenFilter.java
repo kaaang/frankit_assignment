@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 import kr.co.frankit_assignment.core.user.service.JwtTokenProvider;
+import kr.co.frankit_assignment.core.user.service.exception.UserJwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,11 +26,18 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         var token = this.resolveToken(request);
 
         if (Objects.nonNull(token)) {
-            var claims = jwtTokenProvider.validateAndParse(token);
-            var user = jwtTokenProvider.claimsToUser(claims);
+            try {
+                var claims = jwtTokenProvider.validateAndParse(token);
+                var user = jwtTokenProvider.claimsToUser(claims);
 
-            var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(auth);
+                var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            } catch (UserJwtException e) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"error\": \"Invalid token\"}");
+                return;
+            }
         }
 
         filterChain.doFilter(request, response);

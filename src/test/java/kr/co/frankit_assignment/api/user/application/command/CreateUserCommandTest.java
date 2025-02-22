@@ -1,12 +1,11 @@
 package kr.co.frankit_assignment.api.user.application.command;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.UUID;
 import kr.co.frankit_assignment.api.user.application.command.model.CreateUserCommandModel;
-import kr.co.frankit_assignment.api.user.application.exception.UserAlreadyExistsException;
+import kr.co.frankit_assignment.api.user.application.exception.DuplicateUserEmailException;
 import kr.co.frankit_assignment.config.UnitTestConfig;
 import kr.co.frankit_assignment.core.user.repository.write.UserWriteRepository;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,8 @@ class CreateUserCommandTest extends UnitTestConfig {
         given(model.getEmail()).willReturn("test");
         given(userWriteRepository.existsByEmail(anyString())).willReturn(true);
 
-        assertThatThrownBy(() -> command.execute(model)).isInstanceOf(UserAlreadyExistsException.class);
+        assertThatThrownBy(() -> command.execute(model))
+                .isInstanceOf(DuplicateUserEmailException.class);
     }
 
     @Test

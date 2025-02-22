@@ -2,7 +2,7 @@ package kr.co.frankit_assignment.api.user.application.command;
 
 import kr.co.frankit_assignment.api.kernel.command.Command;
 import kr.co.frankit_assignment.api.user.application.command.model.CreateUserCommandModel;
-import kr.co.frankit_assignment.api.user.application.exception.UserAlreadyExistsException;
+import kr.co.frankit_assignment.api.user.application.exception.DuplicateUserEmailException;
 import kr.co.frankit_assignment.core.user.UserData;
 import kr.co.frankit_assignment.core.user.UserFactory;
 import kr.co.frankit_assignment.core.user.repository.write.UserWriteRepository;
@@ -39,7 +39,7 @@ public class CreateUserCommand implements Command<CreateUserCommandModel> {
 
     private void checkIfExists(@NonNull String email) {
         if (userWriteRepository.existsByEmail(email)) {
-            throw new UserAlreadyExistsException("이미 가입된 이메일 입니다.");
+            throw new DuplicateUserEmailException("이미 가입된 이메일 입니다.");
         }
     }
 }
