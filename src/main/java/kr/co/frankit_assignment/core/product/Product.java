@@ -41,4 +41,8 @@ public class Product extends BaseEntityAggregateRoot<Product> {
     public void addOption(@NonNull ProductOption option) {
         this.options.add(option);
     }
+
+    public void removeOption(@NonNull ProductOption option) {
+        this.options.remove(option);
+    }
 }

@@ -200,7 +200,7 @@ docker compose -f ./.lezhin_test/docker-compose.yml up -d
 | `403` | 내가 생성한 상품이 아닐경우 |
 | `404` | 상품을 찾을 수 없는 경우  |
 
-> #### [POST] /products/:id/options/:optionId - 상품 옵션 수정
+> #### [PUT] /products/:id/options/:optionId - 상품 옵션 수정
  
 ##### PathVariable
 | Key        | Type | Required | Description |
@@ -220,5 +220,21 @@ docker compose -f ./.lezhin_test/docker-compose.yml up -d
 | Code  | Description     |
 |:------|:----------------|
 | `204` | 옵션 수정 성공        |
+| `403` | 내가 생성한 상품이 아닐경우 |
+| `404` | 상품을 찾을 수 없는 경우  |
+
+> #### [DELETE] /products/:id/options/:optionId - 상품 옵션 삭제
+
+##### PathVariable
+| Key        | Type | Required | Description |
+|:-----------|:-----|:---------|:------------|
+| `id`       | UUID | true     | 상품 아이디      |
+| `optionId` | UUID | true     | 상품 옵션 아이디   |
+
+
+#### Status
+| Code  | Description     |
+|:------|:----------------|
+| `200` | 옵션 삭제 성공        |
 | `403` | 내가 생성한 상품이 아닐경우 |
 | `404` | 상품을 찾을 수 없는 경우  |
