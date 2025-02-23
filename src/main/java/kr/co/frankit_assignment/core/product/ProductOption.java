@@ -1,6 +1,7 @@
 package kr.co.frankit_assignment.core.product;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import kr.co.frankit_assignment.core.kernel.domain.BaseEntity;
@@ -27,9 +28,10 @@ public class ProductOption extends BaseEntity {
     @Column
     private OptionType type;
 
-    @ElementCollection
+    @Builder.Default
+    @OneToMany(mappedBy = "option", cascade = CascadeType.ALL, orphanRemoval = true)
     @BatchSize(size = 10)
-    private List<String> values;
+    private List<ProductOptionValue> values = new ArrayList<>();
 
     private int extraPrice;
 
@@ -38,22 +40,30 @@ public class ProductOption extends BaseEntity {
             @NonNull Product product,
             @NonNull String name,
             @NonNull OptionType type,
-            List<String> values,
             int extraPrice) {
         return ProductOption.builder()
                 .id(id)
                 .product(product)
                 .name(name)
                 .type(type)
-                .values(values)
                 .extraPrice(extraPrice)
                 .build();
     }
 
-    public void update(String name, OptionType type, List<String> values, int extraPrice) {
+    public void addValue(ProductOptionValue value) {
+        this.values.add(value);
+    }
+
+    public void update(
+            String name, OptionType type, List<ProductOptionValue> values, int extraPrice) {
         this.name = name;
         this.type = type;
-        this.values = values;
         this.extraPrice = extraPrice;
+        this.setValues(values);
+    }
+
+    public void setValues(List<ProductOptionValue> values) {
+        this.values.clear();
+        this.getValues().addAll(values);
     }
 }

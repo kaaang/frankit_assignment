@@ -16,7 +16,11 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
 
 jwt:
   secret: 44asdfsed386f22f6f3c15e787d69aa5b1d682b178e9ca7abc006b06297ab409cd5ffae80e2d8d99586c6d008ebf7bb954bc04c539493b67504b3c715226017ad2a7bbdd29ae5016483d2a79ff4a95bfbe1ba724f602554bb7dc13313ac068af28d08c457705283d7cd1c8bb22ee69c3a577f6ece003136db9f41963b29406f8982c882813d7289cfa43edc72550f69a7ac850cfa781ab4c2d2fd9dec1a0d04f9b0dea333568866f570c1cfeca8e9ddc7940a4dd9ba2d6eca4c47bf73a4b0919dd500b9ad067e9b6c413ef49f6598d14bc8093fd3ce7d0d13aa9eae8807f66621cfd13280c2650593ffe5886498012afd0577aa8b5ae5099e4aedb850dbdc1e325
