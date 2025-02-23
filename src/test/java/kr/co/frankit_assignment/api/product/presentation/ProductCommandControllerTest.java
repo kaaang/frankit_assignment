@@ -325,7 +325,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
             }
 
             @Test
-            void shouldReturnOk() throws Exception {
+            void shouldReturn204() throws Exception {
                 var request =
                         ProductOptionRequest.builder()
                                 .name("test")
@@ -344,6 +344,48 @@ class ProductCommandControllerTest extends TestBaseConfig {
                                 .build();
 
                 getResultActions(payload).andExpect(status().isNoContent());
+            }
+        }
+
+        @Nested
+        class DeleteOptionTest {
+            private Product savedProduct;
+            private ProductOption savedProductOption;
+
+            @BeforeEach
+            void setUp() {
+                savedProduct =
+                        new ProductFactory(
+                                        ProductData.builder()
+                                                .id(UUID.randomUUID())
+                                                .name("test")
+                                                .description("test description")
+                                                .createdBy(test_one_user.getId())
+                                                .price(10000)
+                                                .shippingFee(3000)
+                                                .build())
+                                .create();
+                productWriteRepository.save(savedProduct);
+
+                savedProductOption =
+                        ProductOption.create(
+                                UUID.randomUUID(), savedProduct, "test", OptionType.TEXT, null, 1000);
+                savedProduct.addOption(savedProductOption);
+                productWriteRepository.save(savedProduct);
+            }
+
+            @Test
+            void shouldReturnOk() throws Exception {
+                var payload =
+                        ResultActionsPayload.builder()
+                                .httpMethod(HttpMethod.DELETE)
+                                .userDetails(test_one_user)
+                                .path("/products/{id}/options/{optionId}")
+                                .pathVariables(
+                                        List.of(savedProduct.getId().toString(), savedProductOption.getId().toString()))
+                                .build();
+
+                getResultActions(payload).andExpect(status().isOk());
             }
         }
     }

@@ -34,6 +34,7 @@ public class ProductCommandController {
 
     private final CreateProductOptionCommand createProductOptionCommand;
     private final UpdateProductOptionCommand updateProductOptionCommand;
+    private final DeleteProductOptionCommand deleteProductOptionCommand;
 
     @PostMapping
     @PreAuthorize("hasAnyRole(@RoleContainer.ALLOW_USER_ROLE)")
@@ -133,6 +134,22 @@ public class ProductCommandController {
                 .invoke();
 
         return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}/options/{optionId}")
+    @PreAuthorize("hasAnyRole(@RoleContainer.ALLOW_USER_ROLE)")
+    public ResponseEntity<Object> deleteOption(
+            @AuthenticationPrincipal User user, @PathVariable UUID id, @PathVariable UUID optionId) {
+        new CommandExecutor<>(
+                        deleteProductOptionCommand,
+                        DeleteProductOptionCommandModel.builder()
+                                .productId(id)
+                                .userId(user.getId())
+                                .optionId(optionId)
+                                .build())
+                .invoke();
+
+        return ResponseEntity.ok().build();
     }
 
     private void validateOption(@NonNull OptionType type, List<String> values) throws BindException {
