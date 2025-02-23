@@ -28,6 +28,6 @@ INSERT INTO public.product_bcs_products (id, created_at, deleted_at, updated_at,
 INSERT INTO public.product_bcs_options (id, created_at, updated_at, extra_price, name, type, product_id) VALUES ('edd0f849-1bc2-489c-a180-1ee6df9ce7f6', '2025-02-24 00:11:46.860352', '2025-02-24 00:11:46.860352', 500, '색상', 'SELECT', 'b92a3bca-4cd8-4af6-83ad-63731557f7c6');
 INSERT INTO public.product_bcs_options (id, created_at, updated_at, extra_price, name, type, product_id) VALUES ('472b3f91-fe65-410e-a41a-afa9126b2e63', '2025-02-24 00:11:59.644460', '2025-02-24 00:11:59.644460', 500, '색상', 'TEXT', 'b92a3bca-4cd8-4af6-83ad-63731557f7c6');
 
-INSERT INTO public.product_bcs_option_values (id, created_at, updated_at, value, option_id) VALUES (1, '2025-02-24 00:11:46.862327', '2025-02-24 00:11:46.862327', '빨', 'edd0f849-1bc2-489c-a180-1ee6df9ce7f6');
-INSERT INTO public.product_bcs_option_values (id, created_at, updated_at, value, option_id) VALUES (2, '2025-02-24 00:11:46.875571', '2025-02-24 00:11:46.875571', '파', 'edd0f849-1bc2-489c-a180-1ee6df9ce7f6');
-INSERT INTO public.product_bcs_option_values (id, created_at, updated_at, value, option_id) VALUES (3, '2025-02-24 00:11:46.877840', '2025-02-24 00:11:46.877840', '초', 'edd0f849-1bc2-489c-a180-1ee6df9ce7f6');
+INSERT INTO public.product_bcs_option_values (created_at, updated_at, value, option_id) VALUES ('2025-02-24 00:11:46.862327', '2025-02-24 00:11:46.862327', '빨', 'edd0f849-1bc2-489c-a180-1ee6df9ce7f6');
+INSERT INTO public.product_bcs_option_values (created_at, updated_at, value, option_id) VALUES ('2025-02-24 00:11:46.875571', '2025-02-24 00:11:46.875571', '파', 'edd0f849-1bc2-489c-a180-1ee6df9ce7f6');
+INSERT INTO public.product_bcs_option_values (created_at, updated_at, value, option_id) VALUES ('2025-02-24 00:11:46.877840', '2025-02-24 00:11:46.877840', '초', 'edd0f849-1bc2-489c-a180-1ee6df9ce7f6');
