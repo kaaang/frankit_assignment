@@ -8,7 +8,8 @@ import kr.co.frankit_assignment.api.kernel.presentation.response.HttpApiResponse
 import kr.co.frankit_assignment.api.product.application.command.*;
 import kr.co.frankit_assignment.api.product.application.command.model.*;
 import kr.co.frankit_assignment.api.product.presentation.rqeuest.ProductCreateRequest;
-import kr.co.frankit_assignment.api.product.presentation.rqeuest.ProductOptionRequest;
+import kr.co.frankit_assignment.api.product.presentation.rqeuest.ProductOptionCreateRequest;
+import kr.co.frankit_assignment.api.product.presentation.rqeuest.ProductOptionUpdateRequest;
 import kr.co.frankit_assignment.api.product.presentation.rqeuest.ProductUpdateRequest;
 import kr.co.frankit_assignment.core.product.vo.OptionType;
 import kr.co.frankit_assignment.core.user.User;
@@ -93,7 +94,7 @@ public class ProductCommandController {
     public ResponseEntity<Object> createOption(
             @AuthenticationPrincipal User user,
             @PathVariable UUID id,
-            @Valid @RequestBody ProductOptionRequest request)
+            @Valid @RequestBody ProductOptionCreateRequest request)
             throws BindException {
         this.validateOption(request.getType(), request.getValues());
         new CommandExecutor<>(
@@ -117,7 +118,7 @@ public class ProductCommandController {
             @AuthenticationPrincipal User user,
             @PathVariable UUID id,
             @PathVariable UUID optionId,
-            @Valid @RequestBody ProductOptionRequest request)
+            @Valid @RequestBody ProductOptionUpdateRequest request)
             throws BindException {
         this.validateOption(request.getType(), request.getValues());
         new CommandExecutor<>(

@@ -7,6 +7,7 @@ import kr.co.frankit_assignment.api.product.application.command.model.CreateProd
 import kr.co.frankit_assignment.api.product.application.exception.ProductAccessDeniedException;
 import kr.co.frankit_assignment.api.product.application.exception.ProductNotFoundException;
 import kr.co.frankit_assignment.core.product.ProductOption;
+import kr.co.frankit_assignment.core.product.ProductOptionValue;
 import kr.co.frankit_assignment.core.product.repository.write.ProductWriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -37,12 +38,10 @@ public class CreateProductOptionCommand implements Command<CreateProductOptionCo
 
         var option =
                 ProductOption.create(
-                        UUID.randomUUID(),
-                        product,
-                        model.getName(),
-                        model.getType(),
-                        model.getValues(),
-                        model.getExtraPrice());
+                        UUID.randomUUID(), product, model.getName(), model.getType(), model.getExtraPrice());
+        model.getValues().stream()
+                .map(value -> ProductOptionValue.create(option, value))
+                .forEach(option::addValue);
         product.addOption(option);
 
         productWriteRepository.save(product);

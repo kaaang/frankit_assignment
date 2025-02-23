@@ -5,6 +5,7 @@ import kr.co.frankit_assignment.api.product.application.command.model.UpdateProd
 import kr.co.frankit_assignment.api.product.application.exception.ProductAccessDeniedException;
 import kr.co.frankit_assignment.api.product.application.exception.ProductNotFoundException;
 import kr.co.frankit_assignment.api.product.application.exception.ProductOptionNotFoundException;
+import kr.co.frankit_assignment.core.product.ProductOptionValue;
 import kr.co.frankit_assignment.core.product.repository.write.ProductWriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -31,8 +32,10 @@ public class UpdateProductOptionCommand implements Command<UpdateProductOptionCo
                 product.getOptions().stream()
                         .findFirst()
                         .orElseThrow(() -> new ProductOptionNotFoundException("옵션을 찾을 수 없습니다."));
+        var values =
+                model.getValues().stream().map(value -> ProductOptionValue.create(option, value)).toList();
+        option.update(model.getName(), model.getType(), values, model.getExtraPrice());
 
-        option.update(model.getName(), model.getType(), model.getValues(), model.getExtraPrice());
         productWriteRepository.save(product);
     }
 }

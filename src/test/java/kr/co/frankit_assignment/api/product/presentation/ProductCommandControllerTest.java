@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import java.util.UUID;
 import kr.co.frankit_assignment.api.product.presentation.rqeuest.ProductCreateRequest;
-import kr.co.frankit_assignment.api.product.presentation.rqeuest.ProductOptionRequest;
+import kr.co.frankit_assignment.api.product.presentation.rqeuest.ProductOptionCreateRequest;
 import kr.co.frankit_assignment.api.product.presentation.rqeuest.ProductUpdateRequest;
 import kr.co.frankit_assignment.config.TestBaseConfig;
 import kr.co.frankit_assignment.config.payload.ResultActionsPayload;
@@ -235,7 +235,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
             @Test
             void shouldReturn400Error_WhenSELECT_TYPE_AndEmptyValues() throws Exception {
                 var request =
-                        ProductOptionRequest.builder()
+                        ProductOptionCreateRequest.builder()
                                 .name("test")
                                 .type(OptionType.SELECT)
                                 .extraPrice(100)
@@ -256,7 +256,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
             @Test
             void shouldReturn400Error_WhenTEXT_TYPE_AndHasValues() throws Exception {
                 var request =
-                        ProductOptionRequest.builder()
+                        ProductOptionCreateRequest.builder()
                                 .name("test")
                                 .type(OptionType.TEXT)
                                 .values(List.of("test"))
@@ -278,7 +278,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
             @Test
             void shouldReturnOk() throws Exception {
                 var request =
-                        ProductOptionRequest.builder()
+                        ProductOptionCreateRequest.builder()
                                 .name("test")
                                 .type(OptionType.TEXT)
                                 .extraPrice(100)
@@ -318,8 +318,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
                 productWriteRepository.save(savedProduct);
 
                 savedProductOption =
-                        ProductOption.create(
-                                UUID.randomUUID(), savedProduct, "test", OptionType.TEXT, null, 1000);
+                        ProductOption.create(UUID.randomUUID(), savedProduct, "test", OptionType.TEXT, 1000);
                 savedProduct.addOption(savedProductOption);
                 productWriteRepository.save(savedProduct);
             }
@@ -327,7 +326,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
             @Test
             void shouldReturn204() throws Exception {
                 var request =
-                        ProductOptionRequest.builder()
+                        ProductOptionCreateRequest.builder()
                                 .name("test")
                                 .type(OptionType.TEXT)
                                 .extraPrice(100)
@@ -368,8 +367,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
                 productWriteRepository.save(savedProduct);
 
                 savedProductOption =
-                        ProductOption.create(
-                                UUID.randomUUID(), savedProduct, "test", OptionType.TEXT, null, 1000);
+                        ProductOption.create(UUID.randomUUID(), savedProduct, "test", OptionType.TEXT, 1000);
                 savedProduct.addOption(savedProductOption);
                 productWriteRepository.save(savedProduct);
             }
