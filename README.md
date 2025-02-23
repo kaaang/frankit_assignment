@@ -238,3 +238,24 @@ docker compose -f ./.lezhin_test/docker-compose.yml up -d
 | `200` | 옵션 삭제 성공        |
 | `403` | 내가 생성한 상품이 아닐경우 |
 | `404` | 상품을 찾을 수 없는 경우  |
+
+> #### [GET] /products/:id/options - 상품 옵션 리스트 검색
+
+##### PathVariable
+| Key  | Type | Required | Description |
+|:-----|:-----|:---------|:------------|
+| `id` | UUID | true     | 상품 아이디      |
+
+##### ResponseBody - data -> list
+| Key          | Type           | Required | Description         |
+|:-------------|:---------------|:---------|:--------------------|
+| `id`         | UUID           | true     | 옵션 아이디              |
+| `name`       | String         | true     | 옵션 이름               |
+| `type`       | Enum           | true     | 옵션 타입(TEXT, SELECT) |
+| `values`     | List -> String | false    | 옵션 값(SELECT일 경우)    |
+| `extraPrice` | Integer        | true     | 가격                  |
+
+#### Status
+| Code  | Description  |
+|:------|:-------------|
+| `200` | 옵션 리스트 조회 성공 |

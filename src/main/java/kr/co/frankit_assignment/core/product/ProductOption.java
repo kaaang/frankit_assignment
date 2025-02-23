@@ -6,6 +6,7 @@ import java.util.UUID;
 import kr.co.frankit_assignment.core.kernel.domain.BaseEntity;
 import kr.co.frankit_assignment.core.product.vo.OptionType;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -26,7 +27,9 @@ public class ProductOption extends BaseEntity {
     @Column
     private OptionType type;
 
-    @ElementCollection private List<String> values;
+    @ElementCollection
+    @BatchSize(size = 10)
+    private List<String> values;
 
     private int extraPrice;
 

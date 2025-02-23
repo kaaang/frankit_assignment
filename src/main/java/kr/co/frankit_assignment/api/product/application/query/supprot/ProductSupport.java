@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import kr.co.frankit_assignment.api.product.application.query.field.ProductsField;
 import kr.co.frankit_assignment.core.product.Product;
@@ -27,6 +28,17 @@ public class ProductSupport {
                 .orderBy(product.createdAt.desc(), product.id.asc())
                 .limit(field.getSize())
                 .fetch();
+    }
+
+    public Optional<Product> findWithOptionById(@NonNull UUID id) {
+        return Optional.ofNullable(
+                queryFactory
+                        .selectFrom(product)
+                        .leftJoin(product.options)
+                        .fetchJoin()
+                        .where(product.deletedAt.isNull())
+                        .where(product.id.eq(id))
+                        .fetchFirst());
     }
 
     private BooleanBuilder lastViewedAtCondition(UUID lastViewedId, LocalDateTime lastViewedAt) {
