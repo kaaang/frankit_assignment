@@ -47,7 +47,7 @@ presentation - application - domain(core) 크게 3가지의 레이어를 가지�
 해당 프로젝트는 docker 환경이 필요합니다.
 1. docker run (port - [postgresql-master : 5435, postgresql-slave : 5436])
 ```shell
-docker compose -f ./.lezhin_test/docker-compose.yml up -d
+docker compose -f ./.frankit_test/docker-compose.yml up -d
 ```
 
 2. spring 실행
