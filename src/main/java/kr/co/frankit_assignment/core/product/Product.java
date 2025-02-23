@@ -1,13 +1,13 @@
 package kr.co.frankit_assignment.core.product;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import kr.co.frankit_assignment.core.kernel.domain.BaseEntityAggregateRoot;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -29,7 +29,16 @@ public class Product extends BaseEntityAggregateRoot<Product> {
 
     @Column private UUID createdBy;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @BatchSize(size = 3)
+    private List<ProductOption> options = new ArrayList<>();
+
     public void remove(@NonNull LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public void addOption(@NonNull ProductOption option) {
+        this.options.add(option);
     }
 }

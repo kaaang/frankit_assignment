@@ -1,0 +1,32 @@
+package kr.co.frankit_assignment.core.product;
+
+import jakarta.persistence.*;
+import java.util.List;
+import java.util.UUID;
+import kr.co.frankit_assignment.core.kernel.domain.BaseEntity;
+import kr.co.frankit_assignment.core.product.vo.OptionType;
+import lombok.*;
+
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PACKAGE)
+@Getter
+@Entity
+@Table(name = "product_bcs_options")
+public class ProductOption extends BaseEntity {
+    @Id private UUID id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @Column private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column
+    private OptionType type;
+
+    @ElementCollection private List<String> values;
+
+    private int extraPrice;
+}
