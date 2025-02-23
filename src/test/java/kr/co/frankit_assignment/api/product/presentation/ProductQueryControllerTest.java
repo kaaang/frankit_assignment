@@ -47,7 +47,7 @@ class ProductQueryControllerTest extends TestBaseConfig {
                             .httpMethod(HttpMethod.GET)
                             .userDetails(test_one_user)
                             .path("/products/{id}")
-                            .pathVariable(UUID.randomUUID().toString())
+                            .pathVariables(UUID.randomUUID().toString())
                             .build();
 
             getResultActions(payload).andExpect(status().isNotFound());
@@ -60,7 +60,7 @@ class ProductQueryControllerTest extends TestBaseConfig {
                             .httpMethod(HttpMethod.GET)
                             .userDetails(test_one_user)
                             .path("/products/{id}")
-                            .pathVariable(savedProduct.getId().toString())
+                            .pathVariables(savedProduct.getId().toString())
                             .build();
 
             getResultActions(payload).andExpect(status().isOk());

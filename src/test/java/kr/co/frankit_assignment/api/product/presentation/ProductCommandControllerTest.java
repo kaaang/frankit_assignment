@@ -12,6 +12,7 @@ import kr.co.frankit_assignment.config.payload.ResultActionsPayload;
 import kr.co.frankit_assignment.core.product.Product;
 import kr.co.frankit_assignment.core.product.ProductData;
 import kr.co.frankit_assignment.core.product.ProductFactory;
+import kr.co.frankit_assignment.core.product.ProductOption;
 import kr.co.frankit_assignment.core.product.repository.write.ProductWriteRepository;
 import kr.co.frankit_assignment.core.product.vo.OptionType;
 import org.junit.jupiter.api.BeforeEach;
@@ -100,7 +101,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
                             .httpMethod(HttpMethod.PUT)
                             .userDetails(test_one_user)
                             .path("/products/{id}")
-                            .pathVariable(UUID.randomUUID().toString())
+                            .pathVariables(UUID.randomUUID().toString())
                             .request(request)
                             .build();
 
@@ -121,7 +122,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
                             .httpMethod(HttpMethod.PUT)
                             .userDetails(test_two_user)
                             .path("/products/{id}")
-                            .pathVariable(savedProduct.getId().toString())
+                            .pathVariables(savedProduct.getId().toString())
                             .request(request)
                             .build();
 
@@ -142,7 +143,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
                             .httpMethod(HttpMethod.PUT)
                             .userDetails(test_one_user)
                             .path("/products/{id}")
-                            .pathVariable(savedProduct.getId().toString())
+                            .pathVariables(savedProduct.getId().toString())
                             .request(request)
                             .build();
 
@@ -178,7 +179,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
                             .httpMethod(HttpMethod.DELETE)
                             .userDetails(test_one_user)
                             .path("/products/{id}")
-                            .pathVariable(UUID.randomUUID().toString())
+                            .pathVariables(UUID.randomUUID().toString())
                             .build();
 
             getResultActions(payload).andExpect(status().isNotFound());
@@ -191,7 +192,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
                             .httpMethod(HttpMethod.DELETE)
                             .userDetails(test_two_user)
                             .path("/products/{id}")
-                            .pathVariable(savedProduct.getId().toString())
+                            .pathVariables(savedProduct.getId().toString())
                             .build();
 
             getResultActions(payload).andExpect(status().isForbidden());
@@ -204,7 +205,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
                             .httpMethod(HttpMethod.DELETE)
                             .userDetails(test_one_user)
                             .path("/products/{id}")
-                            .pathVariable(savedProduct.getId().toString())
+                            .pathVariables(savedProduct.getId().toString())
                             .build();
 
             getResultActions(payload).andExpect(status().isOk());
@@ -245,7 +246,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
                                 .httpMethod(HttpMethod.POST)
                                 .userDetails(test_one_user)
                                 .path("/products/{id}/options")
-                                .pathVariable(savedProduct.getId().toString())
+                                .pathVariables(savedProduct.getId().toString())
                                 .request(request)
                                 .build();
 
@@ -267,7 +268,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
                                 .httpMethod(HttpMethod.POST)
                                 .userDetails(test_one_user)
                                 .path("/products/{id}/options")
-                                .pathVariable(savedProduct.getId().toString())
+                                .pathVariables(savedProduct.getId().toString())
                                 .request(request)
                                 .build();
 
@@ -288,11 +289,61 @@ class ProductCommandControllerTest extends TestBaseConfig {
                                 .httpMethod(HttpMethod.POST)
                                 .userDetails(test_one_user)
                                 .path("/products/{id}/options")
-                                .pathVariable(savedProduct.getId().toString())
+                                .pathVariables(savedProduct.getId().toString())
                                 .request(request)
                                 .build();
 
                 getResultActions(payload).andExpect(status().isCreated());
+            }
+        }
+
+        @Nested
+        class UpdateOptionTest {
+            private Product savedProduct;
+            private ProductOption savedProductOption;
+
+            @BeforeEach
+            void setUp() {
+                savedProduct =
+                        new ProductFactory(
+                                        ProductData.builder()
+                                                .id(UUID.randomUUID())
+                                                .name("test")
+                                                .description("test description")
+                                                .createdBy(test_one_user.getId())
+                                                .price(10000)
+                                                .shippingFee(3000)
+                                                .build())
+                                .create();
+                productWriteRepository.save(savedProduct);
+
+                savedProductOption =
+                        ProductOption.create(
+                                UUID.randomUUID(), savedProduct, "test", OptionType.TEXT, null, 1000);
+                savedProduct.addOption(savedProductOption);
+                productWriteRepository.save(savedProduct);
+            }
+
+            @Test
+            void shouldReturnOk() throws Exception {
+                var request =
+                        ProductOptionRequest.builder()
+                                .name("test")
+                                .type(OptionType.TEXT)
+                                .extraPrice(100)
+                                .build();
+
+                var payload =
+                        ResultActionsPayload.builder()
+                                .httpMethod(HttpMethod.PUT)
+                                .userDetails(test_one_user)
+                                .path("/products/{id}/options/{optionId}")
+                                .pathVariables(
+                                        List.of(savedProduct.getId().toString(), savedProductOption.getId().toString()))
+                                .request(request)
+                                .build();
+
+                getResultActions(payload).andExpect(status().isOk());
             }
         }
     }

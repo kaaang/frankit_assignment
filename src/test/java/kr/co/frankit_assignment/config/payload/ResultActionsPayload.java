@@ -2,6 +2,7 @@ package kr.co.frankit_assignment.config.payload;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpMethod;
@@ -13,22 +14,28 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 public class ResultActionsPayload<T, V> {
     private HttpMethod httpMethod;
     private String path;
-    private V pathVariable;
+    private V pathVariables;
     private UserDetails userDetails;
     private T request;
 
     public MockHttpServletRequestBuilder getRequestBuilder() {
         MockHttpServletRequestBuilder requestBuilder;
+
+        var uriVariables =
+                (pathVariables instanceof List)
+                        ? ((List<?>) pathVariables).toArray()
+                        : new Object[] {pathVariables};
+
         if (httpMethod.equals(HttpMethod.GET)) {
-            requestBuilder = (pathVariable != null) ? get(path, pathVariable) : get(path);
+            requestBuilder = (pathVariables != null) ? get(path, uriVariables) : get(path);
         } else if (httpMethod.equals(HttpMethod.POST)) {
-            requestBuilder = (pathVariable != null) ? post(path, pathVariable) : post(path);
+            requestBuilder = (pathVariables != null) ? post(path, uriVariables) : post(path);
         } else if (httpMethod.equals(HttpMethod.PUT)) {
-            requestBuilder = (pathVariable != null) ? put(path, pathVariable) : put(path);
+            requestBuilder = (pathVariables != null) ? put(path, uriVariables) : put(path);
         } else if (httpMethod.equals(HttpMethod.DELETE)) {
-            requestBuilder = (pathVariable != null) ? delete(path, pathVariable) : delete(path);
+            requestBuilder = (pathVariables != null) ? delete(path, uriVariables) : delete(path);
         } else if (httpMethod.equals(HttpMethod.PATCH)) {
-            requestBuilder = (pathVariable != null) ? patch(path, pathVariable) : patch(path);
+            requestBuilder = (pathVariables != null) ? patch(path, uriVariables) : patch(path);
         } else {
             throw new IllegalArgumentException("Unsupported HTTP method: " + httpMethod);
         }

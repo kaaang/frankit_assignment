@@ -46,4 +46,11 @@ public class ProductOption extends BaseEntity {
                 .extraPrice(extraPrice)
                 .build();
     }
+
+    public void update(String name, OptionType type, List<String> values, int extraPrice) {
+        this.name = name;
+        this.type = type;
+        this.values = values;
+        this.extraPrice = extraPrice;
+    }
 }
