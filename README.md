@@ -37,7 +37,7 @@ presentation - application - domain(core) 크게 3가지의 레이어를 가지�
 - liqubase를 통하여 db를 관리하도록 구성되어 있으며, 과제 테스트 용이성을 위하여 더미 데이터를 삽입하도록 되어있습니다.
 - | Key         | value          |
   |:------------|:---------------|
-  | `email`     | kang@gmail.com |
+  | `email`     | test@gmail.com |
   | `password`  | password       |
 - 위의 계정으로 signin 하여서 사용가능하도록 삽입하여 두었습니다.
 - 상품은 20개를 더미데이터로 삽입해두었습니다.
@@ -47,7 +47,7 @@ presentation - application - domain(core) 크게 3가지의 레이어를 가지�
 해당 프로젝트는 docker 환경이 필요합니다.
 1. docker run (port - [postgresql-master : 5435, postgresql-slave : 5436])
 ```shell
-docker compose -f ./.lezhin_test/docker-compose.yml up -d
+docker compose -f ./.frankit_test/docker-compose.yml up -d
 ```
 
 2. spring 실행
