@@ -38,4 +38,12 @@ public class ProductQueryController {
 
         return ResponseEntity.ok(HttpApiResponse.of(output));
     }
+
+    @GetMapping("/{id}/options")
+    @PreAuthorize("hasAnyRole(@RoleContainer.ALLOW_USER_ROLE)")
+    public ResponseEntity<Object> optionList(@PathVariable UUID id) {
+        var output = productQuery.getProductOptions(id);
+
+        return ResponseEntity.ok(HttpApiResponse.of(output));
+    }
 }

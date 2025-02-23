@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 import kr.co.frankit_assignment.api.product.application.exception.ProductNotFoundException;
 import kr.co.frankit_assignment.api.product.application.query.field.ProductsField;
+import kr.co.frankit_assignment.api.product.application.query.output.ProductOptionsOutput;
 import kr.co.frankit_assignment.api.product.application.query.output.ProductOutput;
 import kr.co.frankit_assignment.api.product.application.query.output.ProductsOutput;
 import kr.co.frankit_assignment.api.product.application.query.supprot.ProductSupport;
@@ -34,5 +35,15 @@ public class ProductQuery {
         var products = productSupport.findAllBy(field);
 
         return products.stream().map(ProductsOutput::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductOptionsOutput> getProductOptions(@NonNull UUID productId) {
+        var product =
+                productSupport
+                        .findWithOptionById(productId)
+                        .orElseThrow(() -> new ProductNotFoundException("상품을 찾을 수 없습니다."));
+
+        return product.getOptions().stream().map(ProductOptionsOutput::of).toList();
     }
 }
