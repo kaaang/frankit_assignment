@@ -29,4 +29,21 @@ public class ProductOption extends BaseEntity {
     @ElementCollection private List<String> values;
 
     private int extraPrice;
+
+    public static ProductOption create(
+            @NonNull UUID id,
+            @NonNull Product product,
+            @NonNull String name,
+            @NonNull OptionType type,
+            List<String> values,
+            int extraPrice) {
+        return ProductOption.builder()
+                .id(id)
+                .product(product)
+                .name(name)
+                .type(type)
+                .values(values)
+                .extraPrice(extraPrice)
+                .build();
+    }
 }

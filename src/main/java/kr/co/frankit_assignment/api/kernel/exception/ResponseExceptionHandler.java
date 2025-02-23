@@ -1,10 +1,12 @@
 package kr.co.frankit_assignment.api.kernel.exception;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -63,6 +65,23 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
                         .build();
 
         return this.toResponseEntity(errorResponse);
+    }
+
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<Object> handleBindException(BindException ex, ServletWebRequest request) {
+        var errors =
+                ex.getBindingResult().getFieldErrors().stream()
+                        .map(error -> String.format("%s: %s", error.getField(), error.getDefaultMessage()))
+                        .collect(Collectors.toList());
+
+        var errorResponse =
+                ErrorResponse.builder()
+                        .status(HttpStatus.BAD_REQUEST)
+                        .errors(errors)
+                        .path(request.getRequest().getRequestURI())
+                        .build();
+
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 
     @Override
