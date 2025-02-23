@@ -1,24 +1,33 @@
 package kr.co.frankit_assignment.api.product.presentation;
 
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 import kr.co.frankit_assignment.api.kernel.command.CommandExecutor;
 import kr.co.frankit_assignment.api.kernel.presentation.response.HttpApiResponse;
 import kr.co.frankit_assignment.api.product.application.command.CreateProductCommand;
+import kr.co.frankit_assignment.api.product.application.command.CreateProductOptionCommand;
 import kr.co.frankit_assignment.api.product.application.command.DeleteProductCommand;
 import kr.co.frankit_assignment.api.product.application.command.UpdateProductCommand;
 import kr.co.frankit_assignment.api.product.application.command.model.CreateProductCommandModel;
+import kr.co.frankit_assignment.api.product.application.command.model.CreateProductOptionCommandModel;
 import kr.co.frankit_assignment.api.product.application.command.model.DeleteProductCommandModel;
 import kr.co.frankit_assignment.api.product.application.command.model.UpdateProductCommandModel;
 import kr.co.frankit_assignment.api.product.presentation.rqeuest.ProductCreateRequest;
+import kr.co.frankit_assignment.api.product.presentation.rqeuest.ProductOptionRequest;
 import kr.co.frankit_assignment.api.product.presentation.rqeuest.ProductUpdateRequest;
+import kr.co.frankit_assignment.core.product.vo.OptionType;
 import kr.co.frankit_assignment.core.user.User;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.util.CollectionUtils;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,6 +37,8 @@ public class ProductCommandController {
     private final CreateProductCommand createProductCommand;
     private final UpdateProductCommand updateProductCommand;
     private final DeleteProductCommand deleteProductCommand;
+
+    private final CreateProductOptionCommand createProductOptionCommand;
 
     @PostMapping
     @PreAuthorize("hasAnyRole(@RoleContainer.ALLOW_USER_ROLE)")
@@ -79,5 +90,52 @@ public class ProductCommandController {
                 .invoke();
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/options")
+    @PreAuthorize("hasAnyRole(@RoleContainer.ALLOW_USER_ROLE)")
+    public ResponseEntity<Object> createOption(
+            @AuthenticationPrincipal User user,
+            @PathVariable UUID id,
+            @Valid @RequestBody ProductOptionRequest request)
+            throws BindException {
+        this.validateOption(request.getType(), request.getValues());
+        new CommandExecutor<>(
+                        createProductOptionCommand,
+                        CreateProductOptionCommandModel.builder()
+                                .productId(id)
+                                .userId(user.getId())
+                                .name(request.getName())
+                                .type(request.getType())
+                                .extraPrice(request.getExtraPrice())
+                                .values(request.getValues())
+                                .build())
+                .invoke();
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    private void validateOption(@NonNull OptionType type, List<String> values) throws BindException {
+        if (type.equals(OptionType.SELECT) && CollectionUtils.isEmpty(values)) {
+            var bindException = new BindException(this, "productOption");
+            bindException.addError(
+                    new FieldError(
+                            "productOption",
+                            "values", // 필드명
+                            "SELECT 타입은 최소 1개 이상의 값을 가져야 합니다."));
+
+            throw bindException;
+        }
+
+        if (type.equals(OptionType.TEXT) && !CollectionUtils.isEmpty(values)) {
+            var bindException = new BindException(this, "productOption");
+            bindException.addError(
+                    new FieldError(
+                            "productOption",
+                            "values", // 필드명
+                            "TEXT 타입은 values를 지정할 수 없습니다."));
+
+            throw bindException;
+        }
     }
 }
