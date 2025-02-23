@@ -11,9 +11,10 @@ import lombok.NonNull;
 
 @Getter
 @Builder
-public class CreateProductOptionCommandModel implements CommandModel {
+public class UpdateProductOptionCommandModel implements CommandModel {
     @NonNull private UUID productId;
     @NonNull private UUID userId;
+    @NonNull private UUID optionId;
     @NonNull private String name;
     @NonNull private OptionType type;
     private int extraPrice;
