@@ -73,7 +73,7 @@ public class ProductCommandController {
                                 .build())
                 .invoke();
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
@@ -132,7 +132,7 @@ public class ProductCommandController {
                                 .build())
                 .invoke();
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     private void validateOption(@NonNull OptionType type, List<String> values) throws BindException {

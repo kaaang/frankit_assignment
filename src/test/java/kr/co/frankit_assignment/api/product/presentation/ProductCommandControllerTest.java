@@ -130,7 +130,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
         }
 
         @Test
-        void shouldBeReturn200() throws Exception {
+        void shouldBeReturn204() throws Exception {
             var request =
                     ProductUpdateRequest.builder()
                             .name("test1")
@@ -147,7 +147,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
                             .request(request)
                             .build();
 
-            getResultActions(payload).andExpect(status().isOk());
+            getResultActions(payload).andExpect(status().isNoContent());
         }
     }
 
@@ -343,7 +343,7 @@ class ProductCommandControllerTest extends TestBaseConfig {
                                 .request(request)
                                 .build();
 
-                getResultActions(payload).andExpect(status().isOk());
+                getResultActions(payload).andExpect(status().isNoContent());
             }
         }
     }

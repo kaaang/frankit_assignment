@@ -110,7 +110,7 @@ docker compose -f ./.lezhin_test/docker-compose.yml up -d
 #### Status
 | Code  | Description                 |
 |:------|:----------------------------|
-| `200` | 상품 수정 성공                    |
+| `204` | 상품 수정 성공                    |
 | `403` | user권한이 아닐 경우, 상품 생성자가 아닐경우 |
 
 > #### [DELETE] /products/:id - 상품 삭제
@@ -177,3 +177,48 @@ docker compose -f ./.lezhin_test/docker-compose.yml up -d
 | Code  | Description |
 |:------|:------------|
 | `200` | 상품리스트 조회 성공 |
+
+> #### [POST] /products/:id/options - 상품 옵션 생성
+
+##### PathVariable
+| Key        | Type | Required | Description |
+|:-----------|:-----|:---------|:------------|
+| `id`       | UUID | true     | 상품 아이디      |
+
+##### RequestBody
+| Key          | Type        | Required | Description         |
+|:-------------|:------------|:---------|:--------------------|
+| `name`       | String      | true     | 옵션 이름               |
+| `type`       | Enum        | true     | 옵션 타입(TEXT, SELECT) |
+| `values`     | List-String | false    | SELECT 타입일 경우 선택 옵션 |
+| `extraPrice` | Integer     | true     | 옵션 비용               |
+
+#### Status
+| Code  | Description     |
+|:------|:----------------|
+| `201` | 옵션 생성 성공        |
+| `403` | 내가 생성한 상품이 아닐경우 |
+| `404` | 상품을 찾을 수 없는 경우  |
+
+> #### [POST] /products/:id/options/:optionId - 상품 옵션 수정
+ 
+##### PathVariable
+| Key        | Type | Required | Description |
+|:-----------|:-----|:---------|:------------|
+| `id`       | UUID | true     | 상품 아이디      |
+| `optionId` | UUID | true     | 상품 옵션 아이디   |
+
+##### RequestBody
+| Key          | Type        | Required | Description         |
+|:-------------|:------------|:---------|:--------------------|
+| `name`       | String      | true     | 옵션 이름               |
+| `type`       | Enum        | true     | 옵션 타입(TEXT, SELECT) |
+| `values`     | List-String | false    | SELECT 타입일 경우 선택 옵션 |
+| `extraPrice` | Integer     | true     | 옵션 비용               |
+
+#### Status
+| Code  | Description     |
+|:------|:----------------|
+| `204` | 옵션 수정 성공        |
+| `403` | 내가 생성한 상품이 아닐경우 |
+| `404` | 상품을 찾을 수 없는 경우  |
